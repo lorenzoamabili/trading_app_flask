@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
 import plotly.io as pio
 # Assuming this imports the function that returns the plotly figure
-from main import stock_analysis
+from functions.main import stock_analysis
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secure random key for flash messages
