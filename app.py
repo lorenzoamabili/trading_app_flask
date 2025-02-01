@@ -1,41 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
-import io
-import yfinance as yf
+import plotly.io as pio
 from main import stock_analysis
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # For flash messages (optional)
+app.secret_key = os.urandom(24)  # Secure random key
 
-# Function to generate stock analysis plot
-
-
-def generate_stock_plot(stock_symbol, start_date, months):
-    # Fetch historical stock data
-    end_date = datetime.today().strftime('%Y-%m-%d')
-    data = yf.download(stock_symbol, start=start_date, end=end_date)
-
-    # Assuming stock_analysis generates a plot for us
-    fig, ax = plt.subplots()
-    ax.plot(data.index, data['Close'], label='Stock Close Price')
-    ax.set_title(f"{stock_symbol} Stock Analysis")
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Close Price')
-    ax.legend()
-
-    # Save the plot to a BytesIO object
-    img = io.BytesIO()
-    fig.savefig(img, format='png')
-    img.seek(0)  # Rewind the BytesIO object to the beginning
-
-    return img
-
-# Route for the home page
+# Serverless function entry point
 
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
+def handler(request):
     if request.method == 'POST':
         # Get user inputs from the form
         stock = request.form.get('stock_symbol', 'AAPL')
@@ -58,21 +33,11 @@ def home():
                   min_date.strftime('%Y-%m-%d')}.", 'warning')
             return redirect(url_for('home'))
 
-        # Check if the selected date is a Saturday or Sunday
-        if buy_date.weekday() == 5:  # Saturday
-            flash("You cannot select a Saturday. Please choose a weekday.", 'warning')
-            buy_date = buy_date - timedelta(days=1)
-        elif buy_date.weekday() == 6:  # Sunday
-            flash("You cannot select a Sunday. Please choose a weekday.", 'warning')
-            buy_date = buy_date - timedelta(days=2)
+        # Generate the stock plot using Plotly
+        fig = stock_analysis(
+            stock, buy_date.strftime('%Y-%m-%d %H:%M:%S'), months)
+        graph_html = pio.to_html(fig, full_html=False)
 
-        fig = stock_analysis(stock, buy_date.strftime(
-            '%Y-%m-%d %H:%M:%S'), months)
-
-        return render_template('index.html', graph_html=fig)
+        return render_template('index.html', graph_html=graph_html)
 
     return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
