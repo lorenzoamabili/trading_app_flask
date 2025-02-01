@@ -4,8 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Analysis Tool</title>
+    <!-- Adding a bit of style to the page -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            background-color: #f2d7d5;
+            padding: 10px;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .plot-container {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
+
     <h1>📈 Stock Analysis Tool</h1>
 
     <form method="POST">
@@ -38,9 +89,10 @@
 
     <!-- Plotly Graph -->
     {% if graph_html %}
-        <div>
+        <div class="plot-container">
             {{ graph_html|safe }}
         </div>
     {% endif %}
+
 </body>
 </html>
