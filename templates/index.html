@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis Tool</title>
+</head>
+<body>
+    <h1>📈 Stock Analysis Tool</h1>
+
+    <form method="POST">
+        <!-- Stock Symbol Input -->
+        <label for="stock_symbol">Enter Stock Symbol:</label>
+        <input type="text" id="stock_symbol" name="stock_symbol" value="AAPL" required>
+
+        <!-- Months of Data -->
+        <label for="months">Months of Data:</label>
+        <input type="number" id="months" name="months" value="6" min="1" max="60" required>
+
+        <!-- Buy Date -->
+        <label for="buy_date">Select Buy Date:</label>
+        <input type="date" id="buy_date" name="buy_date" required>
+
+        <!-- Submit Button -->
+        <button type="submit">Show Analysis</button>
+    </form>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Plotly Graph -->
+    {% if graph_html %}
+        <div>
+            {{ graph_html|safe }}
+        </div>
+    {% endif %}
+</body>
+</html>
