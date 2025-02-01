@@ -1,6 +1,8 @@
 [build]
+  base = "."
   functions = "functions"
-  publish = "public"
+  publish = "public"        
+  command = "pip install -r requirements.txt"
 
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
